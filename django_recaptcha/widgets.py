@@ -14,16 +14,18 @@ class ReCaptchaBase(widgets.Widget):
     public_key -- String value: can optionally be passed to not make use of the
         project wide Google Site Key.
     """
-
     recaptcha_response_name = "g-recaptcha-response"
 
     def __init__(self, api_params=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if not self.attrs.get("async_js_load", None):
+            self.attrs["async_js_load"] = getattr(
+                settings, "RECAPTCHA_ASYNC_JS_LOAD", False
+            )
+
         self.uuid = uuid.uuid4().hex
         self.api_params = api_params or {}
-
-        if not self.attrs.get("class", None):
-            self.attrs["class"] = "g-recaptcha"
 
     def value_from_datadict(self, data, files, name):
         return data.get(self.recaptcha_response_name, None)

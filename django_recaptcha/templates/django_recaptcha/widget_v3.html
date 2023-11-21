@@ -1,6 +1,13 @@
-{% include "django_recaptcha/includes/js_v3.html" %}
-<input
-    type="hidden"
-    name="{{ widget.name }}"
-    {% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}
+{% if not widget.attrs.recaptcha_js_is_loaded %}
+    {% if async_js_load %}
+        {% include "django_captcha/includes/js_v3_async.html" %}
+    {% else %}
+        {% include "django_captcha/includes/js_v3.html" %}
+    {% endif %}
+{% endif %}
+<input class="g-recaptcha"
+       type="hidden"
+       name="{{ widget.name }}"
+{% for name, value in widget.attrs.items %}{% if value is not False %}
+    {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}
 >

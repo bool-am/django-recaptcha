@@ -1,0 +1,28 @@
+{# The provided implementation caters for only one reCAPTCHA on a page. Override this template and its logic as needed. #}
+<script type="text/javascript">
+    const event = new Event("recaptchaReady");
+
+    window.onloadGCaptchaCallBack = function () {
+        grecaptcha.execute('{{ public_key }}', {action: 'form'})
+            .then(function (token) {
+                console.log("reCAPTCHA validated for 'data-widget-uuid=\"{{ widget_uuid }}\"'. Setting input value...")
+                var element = document.querySelector('.g-recaptcha[data-widget-uuid="{{ widget_uuid }}"]');
+                element.value = token;
+                if (window.hasOwnProperty('recaptchaReady')) {
+                    window.recaptchaReady();
+                }
+                // Dispatch the event.
+                window.dispatchEvent(event);
+            });
+    };
+    window.recaptcha_public_key = "{{ public_key }}";
+    window.api_params = "{% if api_params %}&{{ api_params }}{% endif %}";
+    window.addEventListener('load', (e) => {
+        const recaptchaScript = document.createElement('script');
+        recaptchaScript.src = `//{{ recaptcha_domain }}/recaptcha/api.js?onload=onloadGCaptchaCallBack` +
+            `&render=${window.recaptcha_public_key}${window.api_params}`;
+        recaptchaScript.defer = true;
+        recaptchaScript.async = true;
+        document.body.appendChild(recaptchaScript);
+    });
+</script>

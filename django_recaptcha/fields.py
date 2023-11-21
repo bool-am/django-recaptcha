@@ -6,12 +6,28 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.forms import BoundField
 
 from django_recaptcha import client
 from django_recaptcha.constants import TEST_PRIVATE_KEY, TEST_PUBLIC_KEY
 from django_recaptcha.widgets import ReCaptchaBase, ReCaptchaV2Checkbox, ReCaptchaV3
 
 logger = logging.getLogger(__name__)
+
+
+class ReCaptchaBoundField(BoundField):
+
+    def __init__(self, form, field, name):
+        super().__init__(form, field, name)
+        self.rendered_n_times = 0
+
+    def as_widget(self, widget=None, attrs=None, only_initial=False):
+        attrs = attrs or {}
+        attrs.update({
+            'recaptcha_js_is_loaded': self.rendered_n_times > 0
+        })
+        self.rendered_n_times += 1
+        return super().as_widget(widget, attrs, only_initial)
 
 
 class ReCaptchaField(forms.CharField):
@@ -38,7 +54,8 @@ class ReCaptchaField(forms.CharField):
             )
 
         # reCAPTCHA fields are always required.
-        self.required = True
+        # self.required = True  # No shit Sherlok
+        self.required = kwargs.get('required', True)
 
         # Setup instance variables.
         self.private_key = private_key or getattr(
@@ -51,8 +68,11 @@ class ReCaptchaField(forms.CharField):
         # Update widget attrs with data-sitekey.
         self.widget.attrs["data-sitekey"] = self.public_key
 
-    def get_remote_ip(self):
-        f = sys._getframe()
+    def get_bound_field(self, form, field_name):
+        return ReCaptchaBoundField(form, self, field_name)
+
+    def get_remote_ip(self):  # noqa
+        f = sys._getframe()  # noqa
         while f:
             request = f.f_locals.get("request")
             if request:
@@ -64,6 +84,8 @@ class ReCaptchaField(forms.CharField):
 
     def validate(self, value):
         super().validate(value)
+        if not self.required and not value:
+            return True
 
         try:
             check_captcha = client.submit(

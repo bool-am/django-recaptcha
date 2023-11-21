@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Django reCaptcha Armenian translation
+# Copyright (C) 2023 Bool
+# This file is distributed under the same license as the Django-reCaptcha package.
+# Hrayr Stepanyan <i@hrayr.am>, 2023.
 #
 #, fuzzy
 msgid ""
@@ -10,9 +10,9 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-21 09:40+0200\n"
 "PO-Revision-Date: 2014-05-05 17:18+0400\n"
-"Last-Translator: Michael Samoylov <michael.samoylov@gmail.com>\n"
+"Last-Translator: Hrayr Stepanyan <i@hrayr.am>\n"
 "Language-Team: \n"
-"Language: Russian\n"
+"Language: Armenian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,4 +23,4 @@ msgstr ""
 #, fuzzy
 #| msgid "Incorrect, please try again."
 msgid "Error verifying reCAPTCHA, please try again."
-msgstr "Неверно, попробуйте еще раз"
+msgstr "Սխալ է, փորձեք կրկին"

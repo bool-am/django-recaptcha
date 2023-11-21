@@ -71,7 +71,14 @@ Installation
 
         RECAPTCHA_DOMAIN = 'www.recaptcha.net'
 
-This will change the Google JavaScript api domain as well as the client side field verification domain.
+    This will change the Google JavaScript api domain as well as the client side field verification domain.
+
+#. (OPTIONAL) If you need Javascript file to be loaded in async mode and to work clear us widget attribute `async_js_load` or define Django setting `RECAPTCHA_ASYNC_JS_LOAD`:
+
+    .. code-block:: python
+
+        RECAPTCHA_ASYNC_JS_LOAD = True
+
 
 Usage
 -----
